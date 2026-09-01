@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ImageIcon } from "lucide-react";
 
 type EvidenceCardProps = {
+    priority?: boolean
     src?: string;
     alt: string;
     figure: string;
@@ -23,6 +24,8 @@ export default function EvidenceCard({
                         src={src}
                         alt={alt}
                         fill
+                        sizes="(max-width: 1024px) 100vw, 800px"
+                        loading="eager"
                         className="object-contain"
                     />
                 </div>
