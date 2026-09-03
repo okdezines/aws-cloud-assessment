@@ -494,6 +494,212 @@ cat parts.json`}
 
                         </div>
                     </section>
+                    {/* =========================================================
+    05 — VERSIONING & MFA DELETE
+========================================================= */}
+
+                    <section
+                        id="mfa-delete"
+                        className="mt-16 scroll-mt-10 border-t border-slate-200 pt-16"
+                    >
+                        {/* Section heading */}
+                        <p className="text-xs font-bold uppercase tracking-[0.22em] text-blue-600">
+                            Task 01 / Amazon S3
+                        </p>
+
+                        <div className="mt-4 flex items-start gap-5">
+                            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-sm font-bold text-blue-600">
+                                05
+                            </span>
+
+                            <div>
+                                <h2 className="text-3xl font-bold tracking-tight text-slate-950">
+                                    Versioning & MFA Delete
+                                </h2>
+
+                                <p className="mt-3 max-w-3xl text-base leading-8 text-slate-600">
+                                    Protecting versioned Amazon S3 data against accidental or
+                                    unauthorised permanent deletion by combining S3 Versioning with
+                                    multi-factor authentication.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="mt-12">
+                            {/* PURPOSE */}
+                            <ReportSection label="Purpose">
+                                <p>
+                                    The purpose of this stage was to strengthen the protection and
+                                    recoverability of data stored in Amazon S3. S3 Versioning preserves
+                                    multiple versions of an object when it is changed or replaced, while
+                                    MFA Delete adds an additional authentication requirement to sensitive
+                                    versioning operations.
+                                </p>
+
+                                <p className="mt-4">
+                                    Combining these controls helps reduce the risk of accidental or
+                                    unauthorised permanent deletion of important cloud data.
+                                </p>
+                            </ReportSection>
+
+                            {/* ACTION */}
+                            <ReportSection label="Action">
+                                <p>
+                                    I enabled S3 Versioning and MFA Delete on the assessment bucket and
+                                    verified the configuration using the AWS CLI. I then used a test
+                                    object named
+                                    <code className="mx-1 rounded bg-slate-100 px-1.5 py-0.5 text-sm text-slate-800">
+                                        mfa-delete-test.txt
+                                    </code>
+                                    to demonstrate how Amazon S3 retains multiple versions of the same
+                                    object.
+                                </p>
+
+                                <p className="mt-4">
+                                    After identifying a historical version using its Version ID, I tested
+                                    permanent version deletion and then completed the protected deletion
+                                    using MFA authentication. Finally, I listed the object versions again
+                                    to verify the result.
+                                </p>
+                            </ReportSection>
+
+                            {/* CONFIGURATION */}
+                            <ReportSection label="Configuration Verification">
+                                <CommandBlock
+                                    title="Verify Versioning and MFA Delete"
+                                    command={`aws s3api get-bucket-versioning \\
+  --bucket alpha-large-file-250mb-2026 \\
+  --region ap-southeast-2 \\
+  --profile root-mfa-delete \\
+  --no-cli-pager`}
+                                    explanation="This command retrieves the bucket versioning configuration. The response confirmed that both S3 Versioning and MFA Delete were enabled."
+                                />
+                            </ReportSection>
+
+                            {/* FIGURE 6 */}
+                            <ReportSection label="Evidence">
+                                <EvidenceCard
+                                    src="/evidence/task-1/versioning-mfa-enabled.png"
+                                    alt="AWS CLI showing S3 Versioning and MFA Delete enabled"
+                                    figure="Figure 6"
+                                    caption="AWS CLI verification confirming that S3 Versioning and MFA Delete were enabled on the assessment bucket."
+                                />
+                            </ReportSection>
+
+                            {/* VERSION TESTING */}
+                            <ReportSection label="Object Version Testing">
+                                <p>
+                                    I created multiple versions of the same test object and used the AWS
+                                    CLI to inspect the versions retained by Amazon S3. The output showed
+                                    separate Version IDs for the current and historical versions of the
+                                    object.
+                                </p>
+
+                                <div className="mt-6">
+                                    <CommandBlock
+                                        title="List Object Versions"
+                                        command={`aws s3api list-object-versions \\
+  --bucket alpha-large-file-250mb-2026 \\
+  --prefix mfa-delete-test.txt \\
+  --profile alpha-user \\
+  --query 'Versions[].{VersionId:VersionId,IsLatest:IsLatest}' \\
+  --output table \\
+  --no-cli-pager`}
+                                        explanation="The list-object-versions operation displays each retained version of the test object together with its Version ID and whether it is the latest version."
+                                    />
+                                </div>
+                            </ReportSection>
+
+                            {/* FIGURE 7 */}
+                            <ReportSection label="Evidence">
+                                <EvidenceCard
+                                    src="/evidence/task-1/object-versions-before-delete.png"
+                                    alt="AWS CLI showing two versions of the MFA Delete test object"
+                                    figure="Figure 7"
+                                    caption="The list-object-versions output shows a current and historical version of mfa-delete-test.txt, demonstrating that S3 Versioning retained the previous object version."
+                                />
+                            </ReportSection>
+
+                            {/* MFA DELETE */}
+                            <ReportSection label="MFA Delete Test">
+                                <p>
+                                    I selected the historical object version using its Version ID and
+                                    tested permanent version deletion. I then performed the protected
+                                    deletion using MFA authentication.
+                                </p>
+
+                                <p className="mt-4">
+                                    The current six-digit MFA code was captured silently in a Bash
+                                    variable so that the authentication value was not displayed in the
+                                    terminal.
+                                </p>
+
+                                <div className="mt-6">
+                                    <CommandBlock
+                                        title="Capture MFA Code Securely"
+                                        command={`read -s -p "Enter current six-digit MFA code: " MFA_CODE
+echo`}
+                                        explanation="The Bash -s option prevents the MFA code from being echoed to the terminal while it is entered."
+                                    />
+                                </div>
+
+                                <div className="mt-6">
+                                    <CommandBlock
+                                        title="Delete Historical Version with MFA"
+                                        command={`aws s3api delete-object \\
+  --bucket alpha-large-file-250mb-2026 \\
+  --key mfa-delete-test.txt \\
+  --version-id "$VERSION_ID" \\
+  --mfa "$MFA_SERIAL $MFA_CODE" \\
+  --region ap-southeast-2 \\
+  --profile root-mfa-delete`}
+                                        explanation="The command permanently deletes the selected historical object version while supplying the MFA device serial and current authentication code required by MFA Delete."
+                                    />
+                                </div>
+                            </ReportSection>
+
+                            {/* FIGURE 8 */}
+                            <ReportSection label="Evidence">
+                                <EvidenceCard
+                                    src="/evidence/task-1/mfa-delete-success.png"
+                                    alt="AWS CLI showing MFA authenticated deletion of an S3 object version"
+                                    figure="Figure 8"
+                                    caption="AWS CLI evidence showing two versions before deletion, the MFA-authenticated permanent deletion of the selected historical version, and verification confirming that only the latest version remained."
+                                />
+                            </ReportSection>
+
+                            {/* RESULT */}
+                            <ReportSection label="Result">
+                                <p>
+                                    S3 Versioning and MFA Delete were successfully enabled on the
+                                    assessment bucket. The version listing demonstrated that Amazon S3
+                                    retained separate versions of the test object instead of simply
+                                    overwriting the previous object.
+                                </p>
+
+                                <p className="mt-4">
+                                    The selected historical version was subsequently removed using an
+                                    MFA-authenticated permanent deletion request. Amazon S3 returned the
+                                    targeted Version ID, and the final version listing confirmed that the
+                                    historical version had been removed while the latest version remained.
+                                </p>
+                            </ReportSection>
+
+                            {/* INTERPRETATION */}
+                            <ReportSection label="Interpretation">
+                                <LearningCard>
+                                    This task demonstrated how S3 Versioning and MFA Delete provide
+                                    complementary layers of data protection. Versioning improves
+                                    recoverability by retaining previous object versions, while MFA Delete
+                                    adds stronger authentication to sensitive versioning operations. I
+                                    also learned that a specific Version ID must be targeted when
+                                    permanently deleting a historical object version, and that security
+                                    controls should be verified through practical testing rather than
+                                    relying only on configuration settings.
+                                </LearningCard>
+                            </ReportSection>
+                        </div>
+                    </section>
 
                 </article>
             </div>
