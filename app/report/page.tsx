@@ -120,7 +120,7 @@ echo "$UPLOAD_ID"`}
 
                                 <EvidenceCard
                                     // priority
-                                    src="/evidence/task-1/multipart-upload-id.png"
+                                    src="/evidence/task-1/versioning-mfa-enabled.png"
                                     alt="Terminal showing AWS S3 multipart upload initiation and the captured Upload ID"
                                     figure="Figure 1"
                                     caption="AWS CLI evidence showing the multipart upload being initiated for gunterfile.log and the returned Upload ID being stored in the UPLOAD_ID Bash variable and verified with the echo command."

@@ -18,6 +18,12 @@ export default function EvidenceCard({
     caption,
 }: EvidenceCardProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const basePath =
+        process.env.NODE_ENV === "production"
+            ? "/aws-cloud-assessment"
+            : "";
+
+    const imageSrc = src ? `${basePath}${src}` : undefined;
 
     // Allow Escape key to close the enlarged image
     useEffect(() => {
@@ -50,7 +56,7 @@ export default function EvidenceCard({
                         aria-label={`Enlarge ${figure}: ${alt}`}
                     >
                         <Image
-                            src={src}
+                            src={imageSrc!}
                             alt={alt}
                             fill
                             sizes="(max-width: 1024px) 100vw, 800px"
@@ -122,7 +128,7 @@ export default function EvidenceCard({
                         onClick={(event) => event.stopPropagation()}
                     >
                         <Image
-                            src={src}
+                            src={imageSrc!}
                             alt={alt}
                             fill
                             sizes="100vw"
