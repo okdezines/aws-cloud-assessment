@@ -23,6 +23,54 @@ export default function ReportHeader() {
                             networking, monitoring, security and automation solutions.
                         </p>
                     </div>
+                    {/* Academic identity */}
+                    <div className="mt-10 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-4">
+                            {/* Student */}
+                            <div className="border-b border-slate-200 px-6 py-5 sm:border-r lg:border-b-0">
+                                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
+                                    Student
+                                </p>
+
+                                <p className="mt-2 text-sm font-semibold text-slate-900">
+                                    Omphalus Kua
+                                </p>
+                            </div>
+
+                            {/* Programme */}
+                            <div className="border-b border-slate-200 px-6 py-5 lg:border-b-0 lg:border-r">
+                                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
+                                    Programme
+                                </p>
+
+                                <p className="mt-2 text-sm font-semibold text-slate-900">
+                                    Diploma in Cloud Engineering — Level 7
+                                </p>
+                            </div>
+
+                            {/* Institution */}
+                            <div className="border-b border-slate-200 px-6 py-5 sm:border-b-0 sm:border-r">
+                                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
+                                    Institution
+                                </p>
+
+                                <p className="mt-2 text-sm font-semibold text-slate-900">
+                                    Yoobee College of Creative Innovation
+                                </p>
+                            </div>
+
+                            {/* Tutor */}
+                            <div className="px-6 py-5">
+                                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
+                                    Tutor
+                                </p>
+
+                                <p className="mt-2 text-sm font-semibold text-slate-900">
+                                    Armaan Verman
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Report stats */}
                     <div className="grid grid-cols-3 gap-3">

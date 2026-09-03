@@ -32,11 +32,20 @@ export default function ReportPage() {
                             About this assessment
                         </h2>
 
-                        <p className="mt-6 max-w-3xl text-base leading-8 text-slate-600">
-                            This report documents the practical implementation of cloud
-                            infrastructure solutions using Amazon Web Services. It focuses
-                            on the technical process, supporting evidence, results and the
-                            knowledge gained throughout each assessment task.
+                        <p>
+                            This technical report documents the practical implementation of cloud
+                            infrastructure solutions using Amazon Web Services as part of the Diploma
+                            in Cloud Engineering — Level 7 at Yoobee College of Creative Innovation.
+                            The assessment focuses on the implementation, verification and
+                            interpretation of cloud storage, networking, monitoring and security
+                            controls.
+                        </p>
+
+                        <p className="mt-4">
+                            Each section combines technical explanation, AWS CLI commands, practical
+                            evidence and reflection to demonstrate not only how the infrastructure was
+                            implemented, but also my understanding of the purpose and outcome of each
+                            configuration.
                         </p>
                     </section>
 
@@ -110,7 +119,7 @@ echo "$UPLOAD_ID"`}
                             <ReportSection label="Evidence">
 
                                 <EvidenceCard
-                                    priority
+                                    // priority
                                     src="/evidence/task-1/multipart-upload-id.png"
                                     alt="Terminal showing AWS S3 multipart upload initiation and the captured Upload ID"
                                     figure="Figure 1"
